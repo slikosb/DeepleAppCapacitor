@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      Deepl
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,12 +9,36 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title size="large">Deepl</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    
+  </div>
+  <div>
+    <ion-list>
+      <ion-item>
+        <ion-label>Source language</ion-label>
+        <ion-select class="custom-options" #B (ionChange)="setupSrcLanguage(B.value)">
+          <ion-select-option value="FR">Francais</ion-select-option>
+          <ion-select-option value="EN">Anglais</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item class="encadrer-un-contenu">
+        <ion-input type="text" placeholder="Rentrez votre text ici" (keypress)="getData($event)"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Target language</ion-label>
+        <ion-select class="custom-options" #C (ionChange)="setupLanguage(C.value)">
+          <ion-select-option value="FR">Francais</ion-select-option>
+          <ion-select-option value="EN">Anglais</ion-select-option>
+          <ion-select-option value="TR">Turkish</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item class="encadrer-un-contenu">
+        <p id="outputText"></p>
+      </ion-item>
+    </ion-list>
   </div>
 </ion-content>
