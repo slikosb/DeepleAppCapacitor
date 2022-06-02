@@ -1,6 +1,6 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { DeeplService } from '../Service/Data.service';
-import { SpeechRecognition } from '@awesome-cordova-plugins/speech-recognition/ngx';
+import { SpeechRecognition } from "@capacitor-community/speech-recognition";
 import { Platform } from '@ionic/angular';
 
 @Component({
@@ -17,16 +17,17 @@ export class HomePage {
   matches: Array<string> = [];
   
 
-  constructor(private apiDeepl: DeeplService, private platform: Platform, private changeDetectorRef: ChangeDetectorRef, private speechRecognition: SpeechRecognition) {
-
-    platform.ready().then(() => {
-      this.speechRecognition.isRecognitionAvailable()
-      .then((available: boolean) => this.isSpeechAvailable = available)
-    })
-
+  constructor(private apiDeepl: DeeplService, private platform: Platform, private changeDetectorRef: ChangeDetectorRef) {
+    SpeechRecognition.available();
   }
 
-  ngOnInit(){}
+  ngOnInit(){
+    SpeechRecognition.hasPermission().then((val)=>{
+      if(val.permission == false){
+        SpeechRecognition.requestPermission();
+      }
+    })
+  }
 
   async getData(event: any){
 
@@ -51,33 +52,17 @@ export class HomePage {
 
   }
 
-  public startListening(): void{
-    this.isListening = true;
-    this.matches = [];
-    let options = {
-      language: 'fr-FR',
-      matches: 5,
-      prompt: 'Je vous écoute ! :)',      // Android only
-      showPopup: true,  // Android only
-      showPartial: false 
-    }
-
-    this.speechRecognition.startListening(options)
-    .subscribe(
-      (matches: string[]) => {
-        this.isListening = false;
-        this.matches = matches;
-        this.changeDetectorRef.detectChanges();
-      },
-      (onerror) => {
-        this.isListening = false;
-        this.changeDetectorRef.detectChanges();
-        console.log(onerror);
-      }
-    )
+  startListening(){
+    SpeechRecognition.start({
+      language: "en-US",
+      maxResults: 2,
+      prompt: "Say something",
+      partialResults: true,
+      popup: true,
+    });
   }
   
   public stopListening(): void{
-    this.speechRecognition.stopListening();
+    SpeechRecognition.stop();
   }
 }

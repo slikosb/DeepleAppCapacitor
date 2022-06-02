@@ -2,8 +2,6 @@ import { HttpClient, HttpContext, HttpHeaders } from "@angular/common/http";
 import { Injectable, TRANSLATIONS } from "@angular/core";
 import { Translations } from "../Data/DataSearch";
 
-import { SpeechRecognition } from '@awesome-cordova-plugins/speech-recognition';
-
 
 
 @Injectable({
@@ -15,14 +13,6 @@ export class DeeplService{
   speechRecognition: any;
 
     constructor(private http: HttpClient){
-      SpeechRecognition.hasPermission().then((hasPermission: boolean) => {
-        console.log('Droit d\'utiliser la reconnaissance vocale ? : ' + hasPermission);
-
-        if(!hasPermission){
-          this.requestSpeechRecognitionPermission();
-        }
-        
-      })
     }
 
     getTranslation(text : string, target_lang : string, source_lang : string): Promise<Translations>{
@@ -44,13 +34,5 @@ export class DeeplService{
             console.log(err);
         }); 
     });
-    }
-
-    private requestSpeechRecognitionPermission(): void{
-      this.speechRecognition.requestPermission()
-      .then(
-        () => console.log('Granted'),
-        () => console.log('Denied')
-      )
     }
 }
