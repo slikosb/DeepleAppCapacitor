@@ -12,8 +12,8 @@ export class HomePage {
 
   targetLanguage : string = "FR"
   sourceLanguage : string = "FR"
-  isSpeechAvailable = false;
-  isListening = false;
+  isSpeechAvailable = true;
+  isListening = true;
   matches: Array<string> = [];
   
 
@@ -52,17 +52,25 @@ export class HomePage {
 
   }
 
-  startListening(){
-    SpeechRecognition.start({
-      language: "en-US",
-      maxResults: 2,
-      prompt: "Say something",
-      partialResults: true,
-      popup: true,
+  requestPermission(){
+    SpeechRecognition.requestPermission().then((val)=>{
+      () => console.log("Permission acceptée");
+      () => console.log("Permission refusée");
     });
   }
+
+  startListening(){
+    console.log("test");
+    SpeechRecognition.start({
+      language: "fr-FR",
+      maxResults: 2,
+      prompt: "Dite quelque chose",
+      partialResults: true,
+      popup: true
+    },);
+  }
   
-  public stopListening(): void{
+  stopListening(){
     SpeechRecognition.stop();
   }
 }
