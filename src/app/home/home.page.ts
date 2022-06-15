@@ -20,11 +20,12 @@ export class HomePage {
   lang = "";  //changement de langue pour le text to speech
   
 
+  // Initialisation de speechRecognition
   constructor(private apiDeepl: DeeplService, private platform: Platform, private changeDetectorRef: ChangeDetectorRef) {
     SpeechRecognition.requestPermission();
   }
 
-
+  // Vérification de la permission d'écouter le micro
   ngOnInit(){
     SpeechRecognition.hasPermission().then((val)=>{
       if(val.permission == false){
@@ -33,6 +34,7 @@ export class HomePage {
     })
   }
 
+  // Récupération du text traduit
   async getData(event: any){
     const val: string = event.target.value;
 
