@@ -24,3 +24,47 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+
+
+// CSS pour mon déroulant servant à choisir les langues
+ion-alert {  
+    // Header Text
+    .alert-title.sc-ion-alert-md {
+      font-size: 25px;
+      font-weight: 600;
+      color: var(--ion-text-color, white);
+    }
+  
+    // checkbox border color
+    [aria-checked="true"].sc-ion-alert-md .alert-radio-icon.sc-ion-alert-md {
+      border-color: white;
+    }
+  
+    // checkbox or radio button color
+    .alert-radio-inner.sc-ion-alert-md {
+      background-color: #5d82a3 !important;
+    }
+  
+    // wrap the text
+    .alert-radio-label.sc-ion-alert-md {
+      white-space: pre-line !important;
+      color: var(--ion-text-color, white);
+    }
+  
+    // Height of text
+    .alert-tappable.sc-ion-alert-md {
+      height: 40px !important;
+    }
+  
+    // Checked text color
+    [aria-checked="true"].sc-ion-alert-md .alert-radio-label.sc-ion-alert-md {
+      color: var(--ion-color-step-850, white);
+    }
+  
+    // Button color
+    .alert-button-inner.sc-ion-alert-md {
+      color: white;
+      font-size: larger;
+    }
+  }

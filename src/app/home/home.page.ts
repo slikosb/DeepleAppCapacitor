@@ -2,6 +2,7 @@ import { Component, ChangeDetectorRef } from '@angular/core';
 import { DeeplService } from '../Service/Data.service';
 import { SpeechRecognition } from "@capacitor-community/speech-recognition";
 import { Platform } from '@ionic/angular';
+import { TextToSpeech } from '@capacitor-community/text-to-speech';
 
 @Component({
   selector: 'app-home',
@@ -10,16 +11,19 @@ import { Platform } from '@ionic/angular';
 })
 export class HomePage {
 
-  targetLanguage : string = "FR"
-  sourceLanguage : string = "FR"
-  isSpeechAvailable = true;
-  isListening = true;
-  matches: Array<string> = [];
+  targetLanguage : string = "FR"  //valeur de base en français
+  sourceLanguage : string = "FR"  //valeur de base en français
+  recording = false;  //valeur de base n'écoute pas
+  myText = "";  //Text qui se remplace en permanence
+  
+  value: Array<String> = [];
+  lang = "";  //changement de langue pour le text to speech
   
 
   constructor(private apiDeepl: DeeplService, private platform: Platform, private changeDetectorRef: ChangeDetectorRef) {
-    SpeechRecognition.available();
+    SpeechRecognition.requestPermission();
   }
+
 
   ngOnInit(){
     SpeechRecognition.hasPermission().then((val)=>{
@@ -30,7 +34,6 @@ export class HomePage {
   }
 
   async getData(event: any){
-
     const val: string = event.target.value;
 
     let responseData = await this.apiDeepl.getTranslation(val, this.targetLanguage, this.sourceLanguage);
@@ -40,18 +43,40 @@ export class HomePage {
     el.innerHTML = responseData.translations[0].text
   }
 
+  swap(){
+    // Swap de langue
+    let temp = this.targetLanguage;
+    this.targetLanguage = this.sourceLanguage;
+    this.sourceLanguage = temp;
+
+    // Swap des textes
+    temp = this.myText
+    this.myText = document.getElementById("outputText").innerHTML;
+    document.getElementById("outputText").innerHTML = temp;
+  }
+  
+
+  // Setup de la langue visée (traduction)
   setupLanguage(targLanguage: string){
     this.targetLanguage = targLanguage
     console.log("Changed the target language to " + this.targetLanguage);
-    
+    console.log("le targLanguage est : " +targLanguage);
+    if(targLanguage=="FR"){
+      this.lang="fr-FR";
+    }else if(targLanguage=="EN"){
+      this.lang="en-US";
+    }
+    console.log(this.lang);
   }
 
+
+  // Setup de la langue source (celle que nous voulons traduire)
   setupSrcLanguage(srcLanguage: string){
     this.sourceLanguage = srcLanguage
     console.log("Changed the source language to " + this.sourceLanguage);
-
   }
 
+  // Demande la permission d'utiliser le micro
   requestPermission(){
     SpeechRecognition.requestPermission().then((val)=>{
       () => console.log("Permission acceptée");
@@ -59,18 +84,79 @@ export class HomePage {
     });
   }
 
-  startListening(){
-    console.log("test");
-    SpeechRecognition.start({
-      language: "fr-FR",
-      maxResults: 2,
-      prompt: "Dite quelque chose",
-      partialResults: true,
-      popup: true
-    },);
+  // Commencer la reconnaissance vocale
+  async startListening(){
+    const available = await SpeechRecognition.available();
+
+    if(available){
+      this.recording = true;
+
+      //test :
+      //this.myText = "heloooooooooooooooooooo";
+
+      SpeechRecognition.start({
+        language: "fr-FR",
+        maxResults: 2,
+        prompt: "Dite quelque chose",
+        partialResults: true,
+        popup: true,
+      });
+
+      SpeechRecognition.addListener("partialResults", (data: any) => {
+        console.log("partialResults was fired", data.matches);
+      });
+      
+
+      // récupération des résultats de la reconnaissance vocale mais impossible de les récupérer
+     /* 
+      SpeechRecognition.addListener('partialResults', (data: any) => {
+        console.log("addListener data=" + JSON.stringify(data));
+
+        if(data.value && data.value.length > 0){
+          console.log("addListener " +data.value[0]);
+          this.myText=data.value[0];
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+*/
+
+      // Cette fonction sert à récupérer les langues acceptés
+      SpeechRecognition.getSupportedLanguages();
+    }
   }
   
-  stopListening(){
-    SpeechRecognition.stop();
+
+  // Arrêter la reconnaissance vocale
+  async stopListening(){
+    console.log("stopListening");
+
+    this.recording = false;
+    await SpeechRecognition.stop();
+  }
+
+
+  // Fonction pour la voix de synthèse
+  speakText(){
+    TextToSpeech.speak({
+      text: document.getElementById("outputText").innerHTML,
+      lang: this.lang,
+      
+    });
+  }
+
+  // Fonction pour le boutton servant à copier le text traduit
+  copyMessage(val: string){ 
+    const selBox = document.createElement('textarea'); 
+    selBox.style.position = 'fixed'; 
+    selBox.style.left = '0'; 
+    selBox.style.top = '0'; 
+    selBox.style.opacity = '0'; 
+    val = document.getElementById("outputText").innerHTML;
+    selBox.value = val;     
+    document.body.appendChild(selBox); 
+    selBox.focus(); 
+    selBox.select(); 
+    document.execCommand('copy'); 
+    document.body.removeChild(selBox); 
   }
 }

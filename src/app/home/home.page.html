@@ -1,46 +1,151 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
+<!-- 
+    Header (android) avec le titre et la couleur primaire qui se trouve dans le fichier "variables.scss"
+-->
+
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
     <ion-title>
-      Deepl
+      Deeplvédeu
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
+
+<!-- Header IOS (Je ne m'en sers pas) -->
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Deepl</ion-title>
+      <ion-title>Deepl</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    
-  </div>
+<!-- 
+    Liste pour le choix de langue, le input pour rentrer le text à traduire et le paragraphe pour le text traduit
+-->
+
   <div>
-    <ion-button (click)='startListening()'>ecouter</ion-button>
-    <ion-button (click)='stopListening()'>stop</ion-button>
     <ion-list>
-      <ion-item>
+      <ion-item color="secondary">
         <ion-label>Source language</ion-label>
-        <ion-select class="custom-options" #B (ionChange)="setupSrcLanguage(B.value)">
-          <ion-select-option value="FR">Francais</ion-select-option>
-          <ion-select-option value="EN">Anglais</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-item class="encadrer-un-contenu">
-        <ion-input type="text" placeholder="Rentrez votre text ici" (keypress)="getData($event)"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label>Target language</ion-label>
-        <ion-select class="custom-options" #C (ionChange)="setupLanguage(C.value)">
-          <ion-select-option value="FR">Francais</ion-select-option>
-          <ion-select-option value="EN">Anglais</ion-select-option>
+        <!-- Liste des langues possibles -->
+        <ion-select [value]="sourceLanguage" id="Source" class="custom-options" #B (ionChange)="setupSrcLanguage(B.value)">
+          <ion-select-option value="FR">French</ion-select-option>
+          <ion-select-option value="EN">English</ion-select-option>
+          <ion-select-option value="BG">Bulgarian</ion-select-option>
+          <ion-select-option value="CS">Czech</ion-select-option>
+          <ion-select-option value="DA">Danish</ion-select-option>
+          <ion-select-option value="DE">German</ion-select-option>
+          <ion-select-option value="EL">Greek</ion-select-option>
+          <ion-select-option value="ES">Spanish</ion-select-option>
+          <ion-select-option value="ET">Estonian</ion-select-option>
+          <ion-select-option value="FI">Finnish</ion-select-option>
+          <ion-select-option value="HU">Hungarian</ion-select-option>
+          <ion-select-option value="ID">Indonesian</ion-select-option>
+          <ion-select-option value="IT">Italian</ion-select-option>
+          <ion-select-option value="JA">Japanese</ion-select-option>
+          <ion-select-option value="LT">Lithuanian</ion-select-option>
+          <ion-select-option value="LV">Latvian</ion-select-option>
+          <ion-select-option value="NL">Dutch</ion-select-option>
+          <ion-select-option value="PL">Polish</ion-select-option>
+          <ion-select-option value="PT">Portuguese</ion-select-option>
+          <ion-select-option value="RO">Romanian</ion-select-option>
+          <ion-select-option value="RU">Russian</ion-select-option>
+          <ion-select-option value="SK">Slovak</ion-select-option>
+          <ion-select-option value="SL">Slovenian</ion-select-option>
+          <ion-select-option value="SV">Swedish</ion-select-option>
           <ion-select-option value="TR">Turkish</ion-select-option>
+          <ion-select-option value="ZH">Chinese</ion-select-option>
         </ion-select>
       </ion-item>
+
+      <!-- Input pour rentrer le text à traduire -->
+      <ion-item class="encadrer-un-contenu">
+        <ion-input placeholder="Entrez votre text ici ;)" type="text" [(ngModel)] ="myText" (keypress)="getData($event)"></ion-input>
+      </ion-item>
+
+      <!-- Tableau pour les boutons -->
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <!-- Bouton pour commencer la reconnaissance vocale -->
+            <ion-button (click)="startListening()" color="tertiary" *ngIf="!recording">
+              <ion-icon name="mic-outline"></ion-icon>
+            </ion-button>
+
+            <!-- Bouton qui stop la reconnaissance vocale -->
+            <ion-button (click)="stopListening()" color="danger" *ngIf="recording">
+              <ion-icon name="mic-off-outline"></ion-icon>
+            </ion-button>
+          </ion-col>
+          <ion-col>
+          </ion-col>
+          <ion-col>
+
+            <!-- Bouton pour swap les langues et les texts -->
+            <ion-button (click)="swap()" color="tertiary">
+              <ion-icon name="swap-horizontal-outline"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-item color="secondary">
+        <ion-label>Target language</ion-label>
+        <ion-select color="secondary" [value]="targetLanguage" class="custom-options" #C (ionChange)="setupLanguage(C.value)">
+          <ion-select-option value="FR">French</ion-select-option>
+          <ion-select-option value="EN">English</ion-select-option>
+          <ion-select-option value="BG">Bulgarian</ion-select-option>
+          <ion-select-option value="CS">Czech</ion-select-option>
+          <ion-select-option value="DA">Danish</ion-select-option>
+          <ion-select-option value="DE">German</ion-select-option>
+          <ion-select-option value="EL">Greek</ion-select-option>
+          <ion-select-option value="ES">Spanish</ion-select-option>
+          <ion-select-option value="ET">Estonian</ion-select-option>
+          <ion-select-option value="FI">Finnish</ion-select-option>
+          <ion-select-option value="HU">Hungarian</ion-select-option>
+          <ion-select-option value="ID">Indonesian</ion-select-option>
+          <ion-select-option value="IT">Italian</ion-select-option>
+          <ion-select-option value="JA">Japanese</ion-select-option>
+          <ion-select-option value="LT">Lithuanian</ion-select-option>
+          <ion-select-option value="LV">Latvian</ion-select-option>
+          <ion-select-option value="NL">Dutch</ion-select-option>
+          <ion-select-option value="PL">Polish</ion-select-option>
+          <ion-select-option value="PT">Portuguese</ion-select-option>
+          <ion-select-option value="RO">Romanian</ion-select-option>
+          <ion-select-option value="RU">Russian</ion-select-option>
+          <ion-select-option value="SK">Slovak</ion-select-option>
+          <ion-select-option value="SL">Slovenian</ion-select-option>
+          <ion-select-option value="SV">Swedish</ion-select-option>
+          <ion-select-option value="TR">Turkish</ion-select-option>
+          <ion-select-option value="ZH">Chinese</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <!-- Paragraphe pour le text traduit -->
       <ion-item class="encadrer-un-contenu">
         <p id="outputText"></p>
       </ion-item>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+
+            <!-- Bouton pour la voix de synthèse (text to speech )-->
+            <ion-button (click)="speakText()" color="tertiary" *ngIf="!recording">
+              <ion-icon name="volume-high-outline"></ion-icon>
+            </ion-button>
+          </ion-col>
+          <ion-col>
+
+          </ion-col>
+          <ion-col>
+
+            <!-- Bouton pour copier le text traduit -->
+            <ion-button (click)="copyMessage()" color="tertiary" value="click to copy" >
+              <ion-icon name="copy-outline"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-list>
   </div>
 </ion-content>

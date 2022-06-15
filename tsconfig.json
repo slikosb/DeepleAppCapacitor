@@ -15,6 +15,7 @@
     "lib": ["es2018", "dom"]
   },
   "angularCompilerOptions": {
+    "forceConsistentCasingInFileNames": false, // Fix for name regex pattern
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
