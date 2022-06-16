@@ -27,6 +27,7 @@
     <ion-list>
       <ion-item color="secondary">
         <ion-label>Source language</ion-label>
+        <!-- drapeau en fonction de la langue -->
         <ion-img id="srcFlag" class="img" [src]="flag"></ion-img>
         <!-- Liste des langues possibles -->
         <ion-select [value]="sourceLanguage" id="Source" class="custom-options" #B (ionChange)="setupSrcLanguage(B.value)">
@@ -92,6 +93,7 @@
 
       <ion-item color="secondary">
         <ion-label>Target language</ion-label>
+        <!-- drapeau en fonction de la langue -->
         <ion-img id="TargetFlag" class="img" [src]="targFlag"></ion-img>
         <ion-select color="secondary" [value]="targetLanguage" class="custom-options" #C (ionChange)="setupLanguage(C.value)">
           <ion-select-option value="FR">French</ion-select-option>
