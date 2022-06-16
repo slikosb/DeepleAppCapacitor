@@ -4,7 +4,7 @@
 
 <ion-header class="ion-no-border">
   <ion-toolbar color="primary">
-    <ion-title>
+    <ion-title class="title">
       Deeplvédeu
     </ion-title>
   </ion-toolbar>
@@ -27,6 +27,7 @@
     <ion-list>
       <ion-item color="secondary">
         <ion-label>Source language</ion-label>
+        <ion-img id="srcFlag" class="img" [src]="flag"></ion-img>
         <!-- Liste des langues possibles -->
         <ion-select [value]="sourceLanguage" id="Source" class="custom-options" #B (ionChange)="setupSrcLanguage(B.value)">
           <ion-select-option value="FR">French</ion-select-option>
@@ -91,6 +92,7 @@
 
       <ion-item color="secondary">
         <ion-label>Target language</ion-label>
+        <ion-img id="TargetFlag" class="img" [src]="targFlag"></ion-img>
         <ion-select color="secondary" [value]="targetLanguage" class="custom-options" #C (ionChange)="setupLanguage(C.value)">
           <ion-select-option value="FR">French</ion-select-option>
           <ion-select-option value="EN">English</ion-select-option>
@@ -125,10 +127,10 @@
       <ion-item class="encadrer-un-contenu">
         <p id="outputText"></p>
       </ion-item>
+
       <ion-grid>
         <ion-row>
           <ion-col>
-
             <!-- Bouton pour la voix de synthèse (text to speech )-->
             <ion-button (click)="speakText()" color="tertiary" *ngIf="!recording">
               <ion-icon name="volume-high-outline"></ion-icon>

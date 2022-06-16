@@ -18,6 +18,8 @@ export class HomePage {
   
   value: Array<String> = [];
   lang = "";  //changement de langue pour le text to speech
+  flag = "";
+  targFlag = "";
   
 
   // Initialisation de speechRecognition
@@ -55,6 +57,12 @@ export class HomePage {
     temp = this.myText
     this.myText = document.getElementById("outputText").innerHTML;
     document.getElementById("outputText").innerHTML = temp;
+
+    //swap des drapeaux
+    let temp2 = this.targFlag;
+    this.targFlag = this.flag;
+    this.flag = temp2;
+    
   }
   
 
@@ -68,7 +76,11 @@ export class HomePage {
     }else if(targLanguage=="EN"){
       this.lang="en-US";
     }
-    console.log(this.lang);
+
+    this.targFlag = "https://countryflagsapi.com/png/" + this.targetLanguage;
+
+
+
   }
 
 
@@ -76,6 +88,7 @@ export class HomePage {
   setupSrcLanguage(srcLanguage: string){
     this.sourceLanguage = srcLanguage
     console.log("Changed the source language to " + this.sourceLanguage);
+    this.flag = "https://countryflagsapi.com/png/" + this.sourceLanguage;
   }
 
   // Demande la permission d'utiliser le micro
