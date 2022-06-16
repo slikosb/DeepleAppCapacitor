@@ -18,8 +18,8 @@ export class HomePage {
   
   value: Array<String> = [];
   lang = "";  //changement de langue pour le text to speech
-  flag = "";
-  targFlag = "";
+  flag = "https://countryflagsapi.com/png/FR";
+  targFlag = "https://countryflagsapi.com/png/FR";
   
 
   // Initialisation de speechRecognition
